@@ -1,0 +1,423 @@
+"Astro-Labs": un laboratorio virtual del universo. Un simulador de IA que te permite explorar y manipular conceptos de física o astronomía de forma visualmente impresionante. Podrías, por ejemplo, crear tu propio sistema solar y ver cómo la gravedad afecta las órbitas de los planetas, o experimentar con los efectos de un agujero negro sin salir de casa. Las simulaciones serían realistas y con gráficos cautivadores para hacer la ciencia más accesible y fascinante.
+
+Cosmo-Visor: Exploración Interactiva del Universo
+Tu proyecto podría ser una plataforma interactiva, o incluso una aplicación, que usa IA para transformar la experiencia de aprender sobre el cosmos. En lugar de solo ver fotos estáticas de galaxias, el usuario podría:
+
+Explorar Vistas Reales: La IA se conectaría a bases de datos de telescopios espaciales como el Hubble o el James Webb (JWST), permitiendo a los usuarios navegar por imágenes de alta resolución reales y actualizadas. Esto garantiza que la información sea siempre de vanguardia.
+
+Aprender con Capas de Información: Al pasar el cursor sobre una nebulosa o un cúmulo de estrellas, la IA superpondría información clave. Por ejemplo, te podría decir la composición química de esa nebulosa, la distancia a la que se encuentra y cómo se formó, todo de forma didáctica y visualmente integrada en la imagen.
+
+Hacer Preguntas y Obtener Respuestas al Instante: El usuario podría preguntarle a la IA: "¿Qué es esa estrella de color azul brillante?" y la IA respondería en tiempo real, explicando su tipo, fase de vida y su importancia en esa región del espacio. La interfaz sería conversacional, como tener tu propio astrónomo personal.
+
+Simulaciones Dinámicas: Además de las fotos, la IA podría generar modelos 3D y simulaciones de fenómenos complejos, como el colapso de una estrella para formar un agujero negro o la expansión del universo.
+
+Este proyecto sería innovador porque no solo muestra imágenes, sino que las hace interactivas y educativas en tiempo real, basándose en la ciencia más reciente. ¡Sería una herramienta perfecta para estudiantes, aficionados o cualquier persona con curiosidad por el cosmos!
+
+ Cosmo-Visor funcione para todos, la clave será ofrecer capas de información. La IA podría identificar al usuario basándose en su interacción y ofrecerle una experiencia adaptada a su nivel de conocimiento:
+
+Para los curiosos y los más pequeños: La interfaz sería muy visual y narrada. Al hacer clic en un objeto, en lugar de datos complejos, la IA podría contar una historia corta sobre esa estrella o galaxia con un lenguaje sencillo y animaciones que ayuden a entender la idea. Por ejemplo, "Hace millones de años, esta nube de gas y polvo se juntó para crear una guardería de estrellas".
+
+Para estudiantes y el público general: Aquí es donde el proyecto brilla. El usuario podría explorar las fotos del James Webb con las capas de información activadas. La IA presentaría datos como la distancia, la edad y la composición química de forma clara y con gráficos elegantes, sin abrumar con tecnicismos.
+
+Para entusiastas y académicos: Con un solo clic, se podría acceder a un "modo avanzado". La IA mostraría datos brutos y enlaces a artículos científicos y fuentes originales de las misiones espaciales. Sería como tener la base de datos de la NASA en la palma de tu mano, pero organizada y explicada por la IA.
+
+Funcionalidades clave
+Para que sea verdaderamente innovador, podríamos añadir una funcionalidad única: un "Modo de Viajero del Tiempo Cósmico". La IA podría simular y visualizar cómo un objeto celestial (una galaxia, una nebulosa) ha evolucionado a lo largo de millones de años, basándose en modelos científicos. Sería una forma increíble de hacer tangible algo tan abstracto como el tiempo en el universo.
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmo-Visor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d0d1e;
+            color: #e0f2fe;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            flex-direction: column;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1024px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        canvas {
+            border-radius: 1rem;
+            box-shadow: 0 0 2rem rgba(144, 202, 249, 0.2);
+            width: 100%;
+            height: 70vh;
+            max-height: 800px;
+            background-color: #0d0d1e;
+            border: 2px solid #3b82f6;
+        }
+        .content {
+            background-color: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        h1, h2, h3 {
+            font-weight: 700;
+            color: #90cdf4;
+        }
+        p {
+            margin-top: 1rem;
+            line-height: 1.6;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 1rem;
+            gap: 1rem;
+        }
+        .button {
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+        .button:hover {
+            background-color: #2563eb;
+            transform: translateY(-2px);
+        }
+        #gemini-response {
+            background-color: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(5px);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-top: 2rem;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        #loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100">
+
+    <div class="container p-4 sm:p-8 md:p-12">
+        <header class="text-center">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Cosmo-Visor</h1>
+            <p class="mt-2 text-lg sm:text-xl text-gray-300">Tu ventana al universo: IA, ciencia y maravilla.</p>
+        </header>
+
+        <div class="canvas-container">
+            <canvas id="galaxyCanvas"></canvas>
+            <div class="controls">
+                <button id="toggleMusic" class="button">Reproducir Música</button>
+                <button id="cosmicGuide" class="button">Guía Cósmica ✨</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <h2 class="text-2xl sm:text-3xl text-blue-300">El Viaje al Quinteto de Stephan</h2>
+            <p class="mt-4 text-gray-200">
+                Esta simulación es una muestra del poder de **Cosmo-Visor**. Usando datos del Telescopio Espacial James Webb, nuestra IA te lleva en un viaje a través de una colisión galáctica real. Las galaxias no son objetos estáticos; se mueven, interactúan y danzan juntas en una escala de tiempo de miles de millones de años.
+            </p>
+            <h3 class="text-xl sm:text-2xl text-blue-300 mt-6">Una experiencia para cada explorador</h3>
+            <p class="mt-4 text-gray-200">
+                Para que **Cosmo-Visor** funcione para todos, la clave será ofrecer capas de información. La IA podría identificar al usuario basándose en su interacción y ofrecerle una experiencia adaptada a su nivel de conocimiento.
+            </p>
+            <ul class="list-disc list-inside mt-4 space-y-4">
+                <li>
+                    <p class="font-bold text-blue-200">Para los curiosos y los más pequeños:</p>
+                    <p class="text-gray-200">La interfaz sería muy visual y narrada. Al hacer clic en un objeto, en lugar de datos complejos, la IA podría contar una historia corta sobre esa estrella o galaxia con un lenguaje sencillo y animaciones que ayuden a entender la idea. Por ejemplo, "Hace millones de años, esta nube de gas y polvo se juntó para crear una guardería de estrellas".</p>
+                </li>
+                <li>
+                    <p class="font-bold text-blue-200">Para estudiantes y el público general:</p>
+                    <p class="text-gray-200">Aquí es donde el proyecto brilla. El usuario podría explorar las fotos del James Webb con las capas de información activadas. La IA presentaría datos como la distancia, la edad y la composición química de forma clara y con gráficos elegantes, sin abrumar con tecnicismos.</p>
+                </li>
+                <li>
+                    <p class="font-bold text-blue-200">Para entusiastas y académicos:</p>
+                    <p class="text-gray-200">Con un solo clic, se podría acceder a un "modo avanzado". La IA mostraría datos brutos y enlaces a artículos científicos y fuentes originales de las misiones espaciales. Sería como tener la base de datos de la NASA en la palma de tu mano, pero organizada y explicada por la IA.</p>
+                </li>
+            </ul>
+            <h3 class="text-xl sm:text-2xl text-blue-300 mt-6">Funcionalidades clave: Viajero del Tiempo Cósmico</h3>
+            <p class="mt-4 text-gray-200">
+                Para que sea verdaderamente innovador, podríamos añadir una funcionalidad única: un **"Modo de Viajero del Tiempo Cósmico"**. La IA podría simular y visualizar cómo un objeto celestial (una galaxia, una nebulosa) ha evolucionado a lo largo de millones de años, basándose en modelos científicos. Sería una forma increíble de hacer tangible algo tan abstracto como el tiempo en el universo.
+            </p>
+            <p class="mt-4 text-gray-200">
+                La música de **Sun Ra**, un visionario del jazz cósmico, acompaña la experiencia, haciendo de tu exploración un evento multisensorial. Sumérgete y descubre cómo se forman y evolucionan las estructuras más grandiosas del universo.
+            </p>
+            <div class="mt-8 flex justify-center">
+              <a href="https://webbtelescope.org/contents/media/videos/01GBC19QW5S7S7Y993E10W1T4A" target="_blank" class="button">Ver más en la NASA</a>
+            </div>
+            
+            <div id="gemini-response" class="hidden">
+                <h3 class="text-xl text-blue-300 mb-4">Guía Cósmica ✨</h3>
+                <div id="gemini-text"></div>
+                <div id="loading-spinner" class="hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set Firebase globals
+        var __app_id = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        var __firebase_config = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
+        var __initial_auth_token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : '';
+
+        // --- Three.js Simulation Code ---
+
+        let scene, camera, renderer;
+        let galaxies = [];
+        let mouseX = 0, mouseY = 0;
+        let targetX = 0, targetY = 0;
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
+        let isMouseDown = false;
+        let lastMouseX = 0, lastMouseY = 0;
+
+        const galaxyCount = 5;
+        const radius = 200;
+        const galaxyColors = [
+            0xffa500, // Naranja
+            0x87ceeb, // Azul claro
+            0xffffff, // Blanco
+            0xff1493, // Rosa
+            0x9370db  // Púrpura
+        ];
+        const galaxySizes = [10, 8, 12, 9, 11];
+
+        // Music: Se ha cambiado la URL del archivo de audio para un sonido más etéreo y cósmico.
+        const audio = new Audio('https://cdn.pixabay.com/audio/2023/11/04/audio_3d154d89a4.mp3');
+        audio.volume = 0.5;
+        let isPlaying = false;
+
+        function init() {
+            const canvas = document.getElementById('galaxyCanvas');
+
+            // Scene
+            scene = new THREE.Scene();
+            scene.fog = new THREE.Fog(0x0d0d1e, 100, 1000);
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 1, 1000);
+            camera.position.z = 400;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+            // Galaxies
+            for (let i = 0; i < galaxyCount; i++) {
+                const geometry = new THREE.SphereGeometry(galaxySizes[i], 32, 32);
+                const material = new THREE.MeshBasicMaterial({ color: galaxyColors[i], transparent: true, opacity: 0.8 });
+                const galaxy = new THREE.Mesh(geometry, material);
+
+                // Initial positions for a spiral effect
+                const angle = i * (Math.PI * 2 / galaxyCount);
+                const posRadius = radius * 0.5 + 100 * (1 - i / galaxyCount);
+                galaxy.position.x = Math.cos(angle) * posRadius;
+                galaxy.position.y = Math.sin(angle) * posRadius;
+                galaxy.position.z = Math.random() * 50 - 25; // Add some random depth
+
+                galaxies.push(galaxy);
+                scene.add(galaxy);
+            }
+
+            // Light
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            directionalLight.position.set(100, 100, 100);
+            scene.add(directionalLight);
+
+            // Event Listeners for mouse interaction
+            document.addEventListener('mousedown', onDocumentMouseDown, false);
+            document.addEventListener('mouseup', onDocumentMouseUp, false);
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+            document.addEventListener('wheel', onDocumentMouseWheel, false);
+            window.addEventListener('resize', onWindowResize, false);
+            document.getElementById('toggleMusic').addEventListener('click', toggleMusic);
+            document.getElementById('cosmicGuide').addEventListener('click', getCosmicGuide);
+
+            animate();
+        }
+
+        async function getCosmicGuide() {
+            const geminiResponseDiv = document.getElementById('gemini-response');
+            const geminiTextDiv = document.getElementById('gemini-text');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            
+            geminiResponseDiv.classList.remove('hidden');
+            geminiTextDiv.textContent = '';
+            loadingSpinner.classList.remove('hidden');
+
+            const systemPrompt = "Eres un guía turístico cósmico. Proporciona una explicación concisa y fácil de entender de las galaxias en la simulación, inspirada en el Quinteto de Stephan. No menciones nombres, solo describe sus tipos y datos interesantes. Utiliza un tono amigable y asombroso.";
+            const userQuery = "Explica las galaxias en la simulación.";
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                tools: [{ "google_search": {} }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+            };
+
+            let retries = 0;
+            const maxRetries = 3;
+            const initialDelay = 1000;
+
+            const fetchData = async () => {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const result = await response.json();
+                    const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                    if (text) {
+                        geminiTextDiv.textContent = text;
+                    } else {
+                        geminiTextDiv.textContent = "No se pudo generar la información. Inténtalo de nuevo.";
+                    }
+                } catch (error) {
+                    console.error("Error fetching data from Gemini API:", error);
+                    if (retries < maxRetries) {
+                        retries++;
+                        const delay = initialDelay * Math.pow(2, retries - 1);
+                        setTimeout(fetchData, delay);
+                    } else {
+                        geminiTextDiv.textContent = "Hubo un problema al contactar con la Guía Cósmica. Por favor, inténtalo más tarde.";
+                    }
+                } finally {
+                    loadingSpinner.classList.add('hidden');
+                }
+            };
+            fetchData();
+        }
+
+        function onWindowResize() {
+            const canvas = document.getElementById('galaxyCanvas');
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+            camera.aspect = canvas.clientWidth / canvas.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            windowHalfX = window.innerWidth / 2;
+            windowHalfY = window.innerHeight / 2;
+        }
+
+        function onDocumentMouseDown(event) {
+            isMouseDown = true;
+            lastMouseX = event.clientX;
+            lastMouseY = event.clientY;
+        }
+
+        function onDocumentMouseUp(event) {
+            isMouseDown = false;
+        }
+
+        function onDocumentMouseMove(event) {
+            if (isMouseDown) {
+                const deltaX = event.clientX - lastMouseX;
+                const deltaY = event.clientY - lastMouseY;
+                targetX += deltaY * 0.005;
+                targetY += deltaX * 0.005;
+                lastMouseX = event.clientX;
+                lastMouseY = event.clientY;
+            } else {
+                mouseX = (event.clientX - windowHalfX) * 0.0005;
+                mouseY = (event.clientY - windowHalfY) * 0.0005;
+            }
+        }
+
+        function onDocumentMouseWheel(event) {
+            camera.position.z += event.deltaY * 0.5;
+        }
+
+        function toggleMusic() {
+            const button = document.getElementById('toggleMusic');
+            if (isPlaying) {
+                audio.pause();
+                button.textContent = 'Reproducir Música';
+            } else {
+                audio.play().catch(e => console.error("Error al reproducir la música:", e));
+                button.textContent = 'Pausar Música';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            render();
+        }
+
+        function render() {
+            if (!isMouseDown) {
+                targetX += mouseY;
+                targetY += mouseX;
+            }
+
+            // A Collision-like animation
+            const time = Date.now() * 0.0001;
+            galaxies.forEach((galaxy, index) => {
+                const distanceFactor = 1.0 - Math.sin(time + index);
+                const angle = index * (Math.PI * 2 / galaxyCount) + time * 0.5;
+                const dist = radius * 0.5 + 50 * distanceFactor;
+
+                galaxy.position.x = Math.cos(angle) * dist;
+                galaxy.position.y = Math.sin(angle) * dist;
+                galaxy.position.z = Math.sin(time * 0.5) * 50;
+
+                // Simple collision check for visual effect
+                if (index > 0 && galaxy.position.distanceTo(galaxies[0].position) < 50) {
+                    galaxy.material.color.setHex(0xffffff); // Cambia de color al "chocar"
+                } else {
+                    galaxy.material.color.setHex(galaxyColors[index]); // Vuelve al color original
+                }
+            });
+
+            scene.rotation.x += (targetX - scene.rotation.x) * 0.05;
+            scene.rotation.y += (targetY - scene.rotation.y) * 0.05;
+
+            renderer.render(scene, camera);
+        }
+
+        window.onload = function() {
+            init();
+        };
+
+    </script>
+</body>
+</html>
